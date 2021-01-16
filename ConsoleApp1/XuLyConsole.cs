@@ -22,7 +22,7 @@ namespace ThuatToanToMau
         private List<KeyValuePair<int, int>> items;
         public void ReadFile()
         {
-            String input = File.ReadAllText(@"D:\asd.txt");           
+            String input = File.ReadAllText(@"data.txt");           
             // Assign values ​​of rows and columns
             var temp=input.Split('\n').ToList();
             n = temp.Count;//dòng
@@ -91,22 +91,44 @@ namespace ThuatToanToMau
             }
             return false;
         }
+        private List<int> lstBlack;
+        //Thêm những cạnh kề vào danh sách để so sánh
+        public void addItemsKe(int k)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                if (res[k, i] == 1 && !lstBlack.Contains(i))
+                {
+                    lstBlack.Add(i);
+                }
+            }
+        }
         public void ToMau()
         {
             //Đệ quy đến khi ko còn phần tử trong mảng Đỉnh
             if (items.Count != 0)
             {
-                Console.Write("\n\tMàu " + (Mau + 1) + ": " + (items[0].Key+1) + ",");
+                Console.Write("\n\tMàu " + (Mau + 1) + ": " + (items[0].Key+1) + ","); 
+                lstBlack = new List<int>();
+                addItemsKe(items[0].Key);
                 for (int i = 0; i < m; i++)
                 {
                     if (res[items[0].Key, i] == 0 && items[0].Key != i && CheckContainItems(i))
                     {
-                        //Show vị trí có gtrị = 0
-                        Console.Write((i+1).ToString() + ",");
-                        //Lấy ra đỉnh(item) tại vị trí có gtrị = 0 
-                        KeyValuePair<int, int> item = items.Find((lItem) => lItem.Key.Equals(i));
-                        //Xóa item tại vị trí đó
-                        items.Remove(item);
+                        if (!lstBlack.Contains(i) || lstBlack.Count == 0)
+                        {
+                            addItemsKe(i);
+                            //Show vị trí có gtrị = 0
+                            Console.Write((i + 1).ToString() + ",");
+                            //Lấy ra đỉnh(item) tại vị trí có gtrị = 0 
+                            KeyValuePair<int, int> item = items.Find((lItem) => lItem.Key.Equals(i));
+                            //Xóa item tại vị trí đó
+                            items.Remove(item);
+                        }
+                        else
+                        {
+                            lstBlack.Remove(i);
+                        }
                     }
                 }
                 //Xóa vị trí item đã duyệt đầu tiên

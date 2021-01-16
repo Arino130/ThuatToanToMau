@@ -41,8 +41,7 @@ namespace ThuatToanToMau
                     }
                     else
                     {
-                        Data[i, j] = 0;
-                        Data[j, i] = Data[i, j];
+                        Data[j, i] = 0;
                     }
                 }
             }   
